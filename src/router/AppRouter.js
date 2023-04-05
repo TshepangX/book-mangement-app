@@ -2,22 +2,30 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Header from '../components/Header';
 import AddBook from '../components/AddBook';
-import BookList from '../components/BookList';
+import BooksList from '../components/BooksList';
 import useLocalStorage from '../hooks/useLocalStorage';
+
 const AppRouter = () => {
-    return (
-      <BrowserRouter>
-        <div>
-          <Header />
-          <div className="main-content">
-            <Switch>
-              <Route component={BooksList} path="/" exact={true} />
-              <Route component={AddBook} path="/add" />
-            </Switch>
-          </div>
+  const [books, setBooks] = useLocalStorage('books', []);
+
+  return (
+    <BrowserRouter>
+      <div>
+        <Header />
+        <div className="main-content">
+          <Switch>
+            <Route component={BooksList} path="/" exact={true} />
+            <Route
+              render={(props) => (
+                <AddBook {...props} books={books} setBooks={setBooks} />
+              )}
+              path="/add"
+            />
+          </Switch>
         </div>
-      </BrowserRouter>
-    );
-  };
-  
-  export default AppRouter;
+      </div>
+    </BrowserRouter>
+  );
+};
+
+export default AppRouter;
